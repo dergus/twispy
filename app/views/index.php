@@ -2,9 +2,10 @@
     $__layout = 'views/layout';
     $layoutParams['title'] = 'TwiSpy';
 ?>
-
-<div class="col-xs-2 col-xs-offset-5">
-    <h1>TwiSpy</h1>
+<div class="row">
+    <div class="col-xs-2 col-xs-offset-5">
+        <h1>TwiSpy</h1>
+    </div>
 </div>
 <div class="row">
     <form class="form-horizontal" method="post" action = '?action=<?=$action?>'>
@@ -19,4 +20,14 @@
             </div>
        </div>
     </form>
+</div>
+<div class="row">
+    <div class="col-xs-6 col-xs-offset-3">
+        <div class="alert alert-info" role="alert">
+            You should be ok with the fact that the app
+            will create a private list in your twitter account
+            and will fill it with users which are followed
+            by the user you specified in the form
+        </div>
+    </div>
 </div>
