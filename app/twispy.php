@@ -2,7 +2,9 @@
 require_once 'helpers/router.php';
 require_once 'handlers.php';
 
-define('ROOT_URL', '/');
+define('ROOT_URL', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://'
+    . $_SERVER['HTTP_HOST'] . '/');
+
 define('TWI_REDIRECT_ACTION', 'twiredirect');
 define('TWI_AUTH_ACTION', 'twiauth');
 define('SAVED_ACTION', 'saved');

@@ -12,8 +12,7 @@
     {
         if (!isset($_SESSION['access_token'])) {
 
-            $root_url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/twispy/';
-            $callback_url = $root_url . '?action=' . TWI_AUTH_ACTION;
+            $callback_url = ROOT_URL . '?action=' . TWI_AUTH_ACTION;
             $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
             $request_token = $connection->oauth('oauth/request_token',
                 ['oauth_callback' => $callback_url]);
@@ -26,6 +25,7 @@
         } else {
             $action = SAVED_ACTION;
         }
+
         return render('views/index', compact('action'));
     }
 
@@ -52,7 +52,9 @@
         $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oauth_token'], $request_token['oauth_token_secret']);
         $access_token = $connection->oauth("oauth/access_token", ["oauth_verifier" => $_REQUEST['oauth_verifier']]);
         $_SESSION['access_token'] = $access_token;
-        spy($access_token, $_SESSION['username']);
+        $list_uri = spy($access_token, $_SESSION['username']);
+
+        redirect("https://twitter.com/" . $list_uri);
     }
 
     function savedAction()
@@ -60,7 +62,9 @@
         if (!isset($_SESSION['access_token'], $_POST['username'])) {
             redirect(ROOT_URL);
         }
-        spy($_SESSION['access_token'], $_POST['username']);
+        $list_uri = spy($_SESSION['access_token'], $_POST['username']);
+
+        redirect("https://twitter.com/" . $list_uri);
     }
 
     /**
@@ -69,7 +73,7 @@
      * by user with given username
      * @param  array $access_token access tokens
      * @param  string $username     twitter username
-     * @return [type]               [description]
+     * @return string            created list uri
      */
     function spy($access_token, $username)
     {
@@ -87,5 +91,5 @@
             $connection->post('lists/members/create_all',compact('list_id', 'user_id'));
         }
 
-        redirect("https://twitter.com/" . $list_uri);
+        return $list_uri;
     }
